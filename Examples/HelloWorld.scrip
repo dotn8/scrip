@@ -1,0 +1,31 @@
+# Hello World
+
+#Worth @MentionSomeone
+[ ] Work on mid term
+[ ] Finish current homework
+
+1. Something or other. /hi there/
+2. Something else
+
+#Table{
+Status,  Activity,                Notes
+   [ ],  1. Do such and such,     ___
+   [ ],  2. Do such and such,     ___
+}
+
+- Unordered item example
+
+#!python
+if includes_slides:
+	#!scrip
+	This section is only shown if `includes_slides` is `True`.
+	!#
+!#
+
+"""
+
+You can't always believe everything you see on the Internet.
+
+--Abraham Lincoln
+
+"""
