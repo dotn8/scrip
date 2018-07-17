@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
@@ -375,5 +376,29 @@ namespace Scrip.Compiler
             _streamWriter.Write(str);
             Console.Write(str);
         }
+
+        public void EnterLink([NotNull] ScripParser.LinkContext context)
+        {
+            var regex = new Regex(@"#Link\{(.+)\|(.+)\}");
+            var match = regex.Match(context.LINK().GetText());
+            var linkTitle = match.Groups[1];
+            var linkTarget = match.Groups[2];
+            Write($"<a href=\"{linkTarget}\">{linkTitle}</a>");
+        }
+
+        public void ExitLink([NotNull] ScripParser.LinkContext context)
+        {
+            
+        }
+
+        //public void EnterMacro([NotNull] ScripParser.MacroContext context)
+        //{
+            
+        //}
+
+        //public void ExitMacro([NotNull] ScripParser.MacroContext context)
+        //{
+            
+        //}
     }
 }

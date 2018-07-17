@@ -7,20 +7,19 @@ paragraph                     : block*?;
 
 block                         : text
 							  | codeBlock
-                              //| parens //| braces | square_brackets | angle_brackets
 		                      | italics | bold | underline | strikeout | literal
 							  | heading1 | heading2 | heading3 | heading4 | heading5 | heading6
 							  | textbox | checkedCheckbox | uncheckedCheckbox | quotation
 				              | hashtag | mention
 							  | table
 							  | (orderedItem block*?) | (unorderedItem block*?)
+							  | link
 						      ;
 
 orderedItem                   : ORDERED_ITEM_DELIMITER block+;
 ORDERED_ITEM_DELIMITER        : [0-9]+ '. ';
 
 unorderedItem                 : '- ' block+;
-//UNORDERED_ITEM_DELIMITER      : '-';
 
 textbox                       : TEXTBOX;
 TEXTBOX                       : '_' '_'+;
@@ -30,9 +29,6 @@ UNCHECKED_CHECKBOX            : '[ ]';
 checkedCheckbox               : CHECKED_CHECKBOX;
 CHECKED_CHECKBOX              : '[x]';
 
-//quotation                     : QUOTATION;
-//QUOTATION                     : '"""' .*? '"""';
-//QUOTATION                     : '"""' .*? QUOTATION_AUTHOR? '"""';
 quotation                     : QUOTATION;
 QUOTATION                     : '"""' .*? QUOTATION_AUTHOR? '"""';
 QUOTATION_AUTHOR              : (' ' | '\n' | '\t')+ '--' (~(' ' | '\n' | '\t')+ | MENTION);
@@ -103,6 +99,12 @@ CODE_BLOCK_DELIMITER_STOP     :  '!#';
 table                         : '#Table{' tableRow ('\r\n' tableRow)*? '}';
 tableRow                      : tableCell (',' tableCell)*;
 tableCell                     : block*?;
+
+link                          : LINK;
+LINK                          : '#Link{' .*? '|' .*? '}';
+
+//macro                         : MACRO;
+//MACRO                         : '#' [a-zA-Z0-9]+ '{' .*? '|' .*? '}';
 
 text : TEXT;
 TEXT : .+?;
