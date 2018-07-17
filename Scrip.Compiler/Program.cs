@@ -20,8 +20,11 @@ namespace Scrip.Compiler
 
             Console.WriteLine("(3/3) Walking:");
             var walker = new ParseTreeWalker();
-            using (var listener = new ScripToHtml(Path.ChangeExtension(args[0], ".html")))
+            var htmlFileName = Path.ChangeExtension(args[0], ".html");
+            using (var fileStream = File.Open(htmlFileName, FileMode.Create))
+            using (var streamWriter = new StreamWriter(fileStream))
             {
+                var listener = new ScripToHtml(Path.GetDirectoryName(htmlFileName), streamWriter);
                 walker.Walk(listener, tree);
             }
 

@@ -13,7 +13,7 @@ block                         : text
 				              | hashtag | mention
 							  | table
 							  | (orderedItem block*?) | (unorderedItem block*?)
-							  | link | image
+							  | link | image | nested
 						      ;
 
 orderedItem                   : ORDERED_ITEM_DELIMITER block+;
@@ -105,6 +105,9 @@ LINK                          : '#Link{' .*? '|' .*? '}';
 
 image                         : IMAGE;
 IMAGE                         : '#Image{' .*? '}';
+
+nested                        : NESTED;
+NESTED                        : '#Nested{' .*? '}';
 
 //macro                         : MACRO;
 //MACRO                         : '#' [a-zA-Z0-9]+ '{' .*? '|' .*? '}';

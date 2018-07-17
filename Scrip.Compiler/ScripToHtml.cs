@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,24 +10,15 @@ using Antlr4.Runtime.Tree;
 
 namespace Scrip.Compiler
 {
-    public class ScripToHtml : IScripListener, IDisposable
+    public class ScripToHtml : IScripListener
     {
-        private readonly FileStream _fileStream;
         private readonly StreamWriter _streamWriter;
+        private readonly string _folder;
 
-        public ScripToHtml(string htmlFileName)
+        public ScripToHtml(string folder, StreamWriter streamWriter)
         {
-            _fileStream = File.Open(htmlFileName, FileMode.Create);
-            _streamWriter = new StreamWriter(_fileStream);
-        }
-
-        public void Dispose()
-        {
-            _streamWriter.Flush();
-            _fileStream.Flush();
-
-            _streamWriter.Dispose();
-            _fileStream.Dispose();
+            _folder = folder;
+            _streamWriter = streamWriter;
         }
 
         public void EnterBlock([NotNull] ScripParser.BlockContext context)
@@ -403,6 +395,30 @@ namespace Scrip.Compiler
         public void ExitImage([NotNull] ScripParser.ImageContext context)
         {
 
+        }
+
+        public void EnterNested([NotNull] ScripParser.NestedContext context)
+        {
+            var regex = new Regex(@"#Nested\{(.+)\}");
+            var text = context.NESTED().GetText();
+            var match = regex.Match(text);
+            var nestedTarget = match.Groups[1].ToString();
+            nestedTarget = Path.Combine(_folder, nestedTarget);
+            var nestedTargetFolder = Path.GetDirectoryName(nestedTarget);
+
+            var lexer = new ScripLexer(new AntlrFileStream(nestedTarget));
+            var tokens = new CommonTokenStream(lexer);
+            var parser = new ScripParser(tokens);
+            var tree = parser.paragraphs();
+
+            var walker = new ParseTreeWalker();
+            var listener = new ScripToHtml(nestedTargetFolder, _streamWriter);
+            walker.Walk(listener, tree);
+        }
+
+        public void ExitNested([NotNull] ScripParser.NestedContext context)
+        {
+            
         }
 
         //public void EnterMacro([NotNull] ScripParser.MacroContext context)
