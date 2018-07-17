@@ -388,17 +388,31 @@ namespace Scrip.Compiler
 
         public void ExitLink([NotNull] ScripParser.LinkContext context)
         {
-            
+
+        }
+
+        public void EnterImage([NotNull] ScripParser.ImageContext context)
+        {
+            var regex = new Regex(@"#Image\{(.+)\}");
+            var text = context.IMAGE().GetText();
+            var match = regex.Match(text);
+            var linkTarget = match.Groups[1];
+             Write($"<img src=\"{linkTarget}\" />");
+        }
+
+        public void ExitImage([NotNull] ScripParser.ImageContext context)
+        {
+
         }
 
         //public void EnterMacro([NotNull] ScripParser.MacroContext context)
         //{
-            
+
         //}
 
         //public void ExitMacro([NotNull] ScripParser.MacroContext context)
         //{
-            
+
         //}
     }
 }

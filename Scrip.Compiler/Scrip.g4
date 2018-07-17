@@ -13,7 +13,7 @@ block                         : text
 				              | hashtag | mention
 							  | table
 							  | (orderedItem block*?) | (unorderedItem block*?)
-							  | link
+							  | link | image
 						      ;
 
 orderedItem                   : ORDERED_ITEM_DELIMITER block+;
@@ -102,6 +102,9 @@ tableCell                     : block*?;
 
 link                          : LINK;
 LINK                          : '#Link{' .*? '|' .*? '}';
+
+image                         : IMAGE;
+IMAGE                         : '#Image{' .*? '}';
 
 //macro                         : MACRO;
 //MACRO                         : '#' [a-zA-Z0-9]+ '{' .*? '|' .*? '}';
