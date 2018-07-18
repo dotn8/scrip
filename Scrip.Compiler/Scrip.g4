@@ -74,23 +74,17 @@ MENTION                       : '@' [a-zA-Z]+;
 literal                       : LITERAL;
 LITERAL                       : '`' .*? '`';
 
-heading1                      : HEADING1;
-HEADING1                      : '# ' ~[\r\n]* ('\r\n' | '\n');
+heading1                      : '# ' block*? ('\r\n' | '\n');
 
-heading2                      : HEADING2;
-HEADING2                      : '## ' ~[\r\n]* ('\r\n' | '\n');
+heading2                      : '## ' block*? ('\r\n' | '\n');
 
-heading3                      : HEADING3;
-HEADING3                      : '### ' ~[\r\n]* ('\r\n' | '\n');
+heading3                      : '### ' block*? ('\r\n' | '\n');
 
-heading4                      : HEADING4;
-HEADING4                      : '#### ' ~[\r\n]* ('\r\n' | '\n');
+heading4                      : '#### ' block*? ('\r\n' | '\n');
 
-heading5                      : HEADING5;
-HEADING5                      : '##### ' ~[\r\n]* ('\r\n' | '\n');
+heading5                      : '##### ' block*? ('\r\n' | '\n');
 
-heading6                      : HEADING6;
-HEADING6                      : '###### ' ~[\r\n]* ('\r\n' | '\n');
+heading6                      : '###### ' block*? ('\r\n' | '\n');
 
 codeBlock                     : CODE_BLOCK_DELIMITER_START .+? CODE_BLOCK_DELIMITER_STOP;
 CODE_BLOCK_DELIMITER_START    :  '#!';

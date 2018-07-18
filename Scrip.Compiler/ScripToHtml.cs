@@ -173,7 +173,6 @@ namespace Scrip.Compiler
         public void EnterHeading1(ScripParser.Heading1Context context)
         {
             Write("<h1>");
-            Write(context.GetText().Trim('#', ' ', '\r', '\n'));
         }
 
         public void ExitHeading1(ScripParser.Heading1Context context)
@@ -184,7 +183,6 @@ namespace Scrip.Compiler
         public void EnterHeading2(ScripParser.Heading2Context context)
         {
             Write("<h2>");
-            Write(context.GetText().Trim('#', ' ', '\r', '\n'));
         }
 
         public void ExitHeading2(ScripParser.Heading2Context context)
@@ -195,7 +193,6 @@ namespace Scrip.Compiler
         public void EnterHeading3(ScripParser.Heading3Context context)
         {
             Write("<h3>");
-            Write(context.GetText().Trim('#', ' ', '\r', '\n'));
         }
 
         public void ExitHeading3(ScripParser.Heading3Context context)
@@ -206,7 +203,6 @@ namespace Scrip.Compiler
         public void EnterHeading4(ScripParser.Heading4Context context)
         {
             Write("<h4>");
-            Write(context.GetText().Trim('#', ' ', '\r', '\n'));
         }
 
         public void ExitHeading4(ScripParser.Heading4Context context)
@@ -217,7 +213,6 @@ namespace Scrip.Compiler
         public void EnterHeading5(ScripParser.Heading5Context context)
         {
             Write("<h5>");
-            Write(context.GetText().Trim('#', ' ', '\r', '\n'));
         }
 
         public void ExitHeading5(ScripParser.Heading5Context context)
