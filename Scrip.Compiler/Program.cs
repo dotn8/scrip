@@ -9,24 +9,7 @@ namespace Scrip.Compiler
     {
         private static void Main(string[] args)
         {
-            Console.WriteLine("(1/3) Lexing");
-            var lexer = new ScripLexer(new AntlrFileStream(args[0]));
-
-            var tokens = new CommonTokenStream(lexer);
-
-            Console.WriteLine("(2/3) Parsing");
-            var parser = new ScripParser(tokens);
-            var tree = parser.paragraphs();
-
-            Console.WriteLine("(3/3) Walking:");
-            var walker = new ParseTreeWalker();
-            var htmlFileName = Path.ChangeExtension(args[0], ".html");
-            using (var fileStream = File.Open(htmlFileName, FileMode.Create))
-            using (var streamWriter = new StreamWriter(fileStream))
-            {
-                var listener = new ScripToHtml(Path.GetDirectoryName(htmlFileName), streamWriter);
-                walker.Walk(listener, tree);
-            }
+            ScripToHtml.ConvertToHtml(args[0]);
 
             Console.Write("\nPress any key to continue.");
             Console.ReadKey();

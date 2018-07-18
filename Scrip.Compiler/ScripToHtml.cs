@@ -15,6 +15,25 @@ namespace Scrip.Compiler
         private readonly StreamWriter _streamWriter;
         private readonly string _folder;
 
+        public static void ConvertToHtml(string scripFilePath)
+        {
+            var lexer = new ScripLexer(new AntlrFileStream(scripFilePath));
+
+            var tokens = new CommonTokenStream(lexer);
+
+            var parser = new ScripParser(tokens);
+            var tree = parser.paragraphs();
+
+            var walker = new ParseTreeWalker();
+            var htmlFileName = Path.ChangeExtension(scripFilePath, ".html");
+            using (var fileStream = File.Open(htmlFileName, FileMode.Create))
+            using (var streamWriter = new StreamWriter(fileStream))
+            {
+                var listener = new ScripToHtml(Path.GetDirectoryName(htmlFileName), streamWriter);
+                walker.Walk(listener, tree);
+            }
+        }
+
         public ScripToHtml(string folder, StreamWriter streamWriter)
         {
             _folder = folder;
@@ -374,7 +393,15 @@ namespace Scrip.Compiler
             var regex = new Regex(@"#Link\{(.+)\|(.+)\}");
             var match = regex.Match(context.LINK().GetText());
             var linkTitle = match.Groups[1];
-            var linkTarget = match.Groups[2];
+            var linkTarget = match.Groups[2].ToString();
+
+            if (linkTarget.ToString().EndsWith(".scrip"))
+            {
+                var nestedTarget = GetAbsolutePath(linkTarget);
+                ConvertToHtml(nestedTarget);
+                linkTarget = Path.ChangeExtension(linkTarget, ".html");
+            }
+
             Write($"<a href=\"{linkTarget}\">{linkTitle}</a>");
         }
 
@@ -397,13 +424,18 @@ namespace Scrip.Compiler
 
         }
 
+        private string GetAbsolutePath(string relativePath)
+        {
+            return Path.Combine(_folder, relativePath);
+        }
+
         public void EnterNested([NotNull] ScripParser.NestedContext context)
         {
             var regex = new Regex(@"#Nested\{(.+)\}");
             var text = context.NESTED().GetText();
             var match = regex.Match(text);
             var nestedTarget = match.Groups[1].ToString();
-            nestedTarget = Path.Combine(_folder, nestedTarget);
+            nestedTarget = GetAbsolutePath(nestedTarget);
             var nestedTargetFolder = Path.GetDirectoryName(nestedTarget);
 
             var lexer = new ScripLexer(new AntlrFileStream(nestedTarget));
