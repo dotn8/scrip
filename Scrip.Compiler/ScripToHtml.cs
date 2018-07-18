@@ -34,6 +34,20 @@ namespace Scrip.Compiler
             }
         }
 
+        private void ConvertDynamicScrip(string evaluatedText)
+        {
+            var lexer = new ScripLexer(new AntlrInputStream(evaluatedText));
+
+            var tokens = new CommonTokenStream(lexer);
+
+            var parser = new ScripParser(tokens);
+            var tree = parser.paragraphs();
+
+            var walker = new ParseTreeWalker();
+            var listener = new ScripToHtml(_folder, _streamWriter);
+            walker.Walk(listener, tree);
+        }
+
         public ScripToHtml(string folder, StreamWriter streamWriter)
         {
             _folder = folder;
@@ -444,6 +458,45 @@ namespace Scrip.Compiler
         }
 
         public void ExitNested([NotNull] ScripParser.NestedContext context)
+        {
+            
+        }
+
+        public void EnterAutoNested([NotNull] ScripParser.AutoNestedContext context)
+        {
+            var entries = Directory.EnumerateFileSystemEntries(_folder).OrderBy(fse => fse);
+
+            var dynamicScrip = "";
+
+            foreach (var fse in entries)
+            {
+                if (Directory.Exists(fse))
+                {
+                    var absolutePath = Path.Combine(fse, "Notes.scrip");
+                    if (!File.Exists(absolutePath))
+                    {
+                        continue;
+                    }
+
+                    var name = Path.GetFileName(fse);
+
+                    dynamicScrip += $"## #Link{{{name}|{name}/Notes.scrip}}\n";
+                }
+                //else
+                //{
+                //    if (!path.EndsWith(".scrip"))
+                //    {
+                //        continue;
+                //    }
+
+                //    dynamicScrip += $"## #Link{{{fse}}}\n";
+                //}
+            }
+
+            ConvertDynamicScrip(dynamicScrip);
+        }
+
+        public void ExitAutoNested([NotNull] ScripParser.AutoNestedContext context)
         {
             
         }

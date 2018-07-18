@@ -13,7 +13,7 @@ block                         : text
 				              | hashtag | mention
 							  | table
 							  | (orderedItem block*?) | (unorderedItem block*?)
-							  | link | image | nested
+							  | link | image | nested | autoNested
 						      ;
 
 orderedItem                   : ORDERED_ITEM_DELIMITER block+;
@@ -65,9 +65,6 @@ STRIKEOUT_DELIMITER           : '-';
 //STRIKEOUT_DELIMITER_START     : (' ' | '\n' | '\t') '-';
 //STRIKEOUT_DELIMITER_STOP      : '-' (' ' | '\n' | '\t');
 
-hashtag                       : HASHTAG;
-HASHTAG                       : '#' [a-zA-Z]+;
-
 mention                       : MENTION;
 MENTION                       : '@' [a-zA-Z]+;
 
@@ -102,6 +99,12 @@ IMAGE                         : '#Image{' .*? '}';
 
 nested                        : NESTED;
 NESTED                        : '#Nested{' .*? '}';
+
+autoNested                    : AUTO_NESTED;
+AUTO_NESTED                   : '#AutoNested{' .*? '}';
+
+hashtag                       : HASHTAG;
+HASHTAG                       : '#' [a-zA-Z]+;
 
 //macro                         : MACRO;
 //MACRO                         : '#' [a-zA-Z0-9]+ '{' .*? '|' .*? '}';
