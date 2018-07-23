@@ -15,7 +15,7 @@ namespace Scrip.Compiler
         private readonly StreamWriter _streamWriter;
         private readonly string _folder;
 
-        public static void ConvertToHtml(string scripFilePath)
+        public static void ConvertFileToHtml(string scripFilePath)
         {
             var lexer = new ScripLexer(new AntlrFileStream(scripFilePath));
 
@@ -30,11 +30,11 @@ namespace Scrip.Compiler
             using (var streamWriter = new StreamWriter(fileStream))
             {
                 var listener = new ScripToHtml(Path.GetDirectoryName(htmlFileName), streamWriter);
-                walker.Walk(listener, tree);
+                listener.ConvertToHtml(tree, walker);
             }
         }
 
-        private void ConvertDynamicScrip(string evaluatedText)
+        private void ConvertScripToHtml(string evaluatedText)
         {
             var lexer = new ScripLexer(new AntlrInputStream(evaluatedText));
 
@@ -46,6 +46,29 @@ namespace Scrip.Compiler
             var walker = new ParseTreeWalker();
             var listener = new ScripToHtml(_folder, _streamWriter);
             walker.Walk(listener, tree);
+        }
+
+        private void ConvertToHtml(ScripParser.ParagraphsContext tree, ParseTreeWalker walker)
+        {
+            var cssPath = typeof(ScripToHtml).Assembly.Location;
+            cssPath = Path.GetDirectoryName(cssPath);
+            cssPath = Path.Combine(cssPath, "ScripToHtml.css");
+            var cssPathTarget = Path.Combine(_folder, "ScripToHtml.css");
+            if (File.Exists(cssPathTarget))
+            {
+                File.Delete(cssPathTarget);
+            }
+
+            File.Copy(cssPath, cssPathTarget);
+
+            Write("<html>");
+            Write("<head>");
+            Write($"<link rel=\"stylesheet\" href=\"ScripToHtml.css\">");
+            Write("</head>");
+            Write("<body>");
+            walker.Walk(this, tree);
+            Write("</body>");
+            Write("</html>");
         }
 
         public ScripToHtml(string folder, StreamWriter streamWriter)
@@ -108,7 +131,7 @@ namespace Scrip.Compiler
 
         public void EnterCheckedCheckbox(ScripParser.CheckedCheckboxContext context)
         {
-            Write("<input type=\"checkbox\" checked disabled>");
+            Write("<input class=\"checkbox\" type=\"checkbox\" checked disabled>");
         }
 
         public void ExitCheckedCheckbox(ScripParser.CheckedCheckboxContext context)
@@ -118,7 +141,7 @@ namespace Scrip.Compiler
 
         public void EnterUncheckedCheckbox(ScripParser.UncheckedCheckboxContext context)
         {
-            Write("<input type=\"checkbox\" disabled>");
+            Write("<input class=\"checkbox\" type=\"checkbox\" disabled>");
         }
 
         public void ExitUncheckedCheckbox(ScripParser.UncheckedCheckboxContext context)
@@ -362,7 +385,7 @@ namespace Scrip.Compiler
 
         public void EnterTextbox(ScripParser.TextboxContext context)
         {
-            Write("<input type=\"text\" disabled>");
+            Write("<input class=\"textbox\" type=\"text\" disabled>");
         }
 
         public void ExitEveryRule(ParserRuleContext ctx)
@@ -407,7 +430,7 @@ namespace Scrip.Compiler
             if (linkTarget.ToString().EndsWith(".scrip"))
             {
                 var nestedTarget = GetAbsolutePath(linkTarget);
-                ConvertToHtml(nestedTarget);
+                ConvertFileToHtml(nestedTarget);
                 linkTarget = Path.ChangeExtension(linkTarget, ".html");
             }
 
@@ -493,7 +516,7 @@ namespace Scrip.Compiler
                 //}
             }
 
-            ConvertDynamicScrip(dynamicScrip);
+            ConvertScripToHtml(dynamicScrip);
         }
 
         public void ExitAutoNested([NotNull] ScripParser.AutoNestedContext context)

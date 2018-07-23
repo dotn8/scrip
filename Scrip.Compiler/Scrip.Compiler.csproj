@@ -60,6 +60,11 @@
     </Antlr4>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="ScripToHtml.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

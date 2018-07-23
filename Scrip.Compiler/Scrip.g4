@@ -88,7 +88,7 @@ CODE_BLOCK_DELIMITER_START    :  '#!';
 CODE_BLOCK_DELIMITER_STOP     :  '!#';
 
 table                         : '#Table{' tableRow ('\r\n' tableRow)*? '}';
-tableRow                      : tableCell (',' tableCell)*;
+tableRow                      : tableCell ('|' tableCell)*;
 tableCell                     : block*?;
 
 link                          : LINK;
@@ -106,11 +106,11 @@ AUTO_NESTED                   : '#AutoNested{' .*? '}';
 hashtag                       : HASHTAG;
 HASHTAG                       : '#' [a-zA-Z]+;
 
-//macro                         : MACRO;
-//MACRO                         : '#' [a-zA-Z0-9]+ '{' .*? '|' .*? '}';
-
 text : TEXT;
 TEXT : .+?;
+
+//macro                         : MACRO;
+//MACRO                         : '#' [a-zA-Z0-9]+ '{' .*? '|' .*? '}';
 
 //WS : [ \t\r\n]+ -> skip ;
 

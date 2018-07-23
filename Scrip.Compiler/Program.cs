@@ -9,7 +9,7 @@ namespace Scrip.Compiler
     {
         private static void Main(string[] args)
         {
-            ScripToHtml.ConvertToHtml(args[0]);
+            ScripToHtml.ConvertFileToHtml(args[0]);
 
             Console.Write("\nPress any key to continue.");
             Console.ReadKey();
