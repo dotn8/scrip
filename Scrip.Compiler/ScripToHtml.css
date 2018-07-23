@@ -6,3 +6,7 @@ input.textbox {
     height: 3em;
     display: block;
 }
+
+input.checkbox {
+    display: inline;
+}

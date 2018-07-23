@@ -64,6 +64,7 @@ namespace Scrip.Compiler
             Write("<html>");
             Write("<head>");
             Write($"<link rel=\"stylesheet\" href=\"ScripToHtml.css\">");
+            Write("<link href=\"http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css\" rel=\"stylesheet\">");
             Write("</head>");
             Write("<body>");
             walker.Walk(this, tree);
