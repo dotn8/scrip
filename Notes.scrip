@@ -1,8 +1,8 @@
 # Notes
 
-[ ] For some reason TEXT nodes choke on commas. The only place commas are used are in the table, which is a parser level rule.
+[x] For some reason TEXT nodes choke on commas. The only place commas are used are in the table, which is a parser level rule.
 [ ] Add support for double quotes and escaping in tables, so that cells can contain commas.
 [ ] Strikeouts, normal dashes, and bullet points need to be differentiated better.
 
-| This |  Is  |   a header
-| 1    |  2   |   3
+| [x]  | Activity                  | Details
+| [ ]  | Verify network connection | ___

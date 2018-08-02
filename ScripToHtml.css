@@ -3,7 +3,6 @@ input.textbox {
     border: 0px solid black;
     border-bottom: .1em solid black;
     width: 100%;
-    height: 3em;
     display: block;
 }
 
