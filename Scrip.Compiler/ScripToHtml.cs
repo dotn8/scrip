@@ -356,7 +356,7 @@ namespace Scrip.Compiler
 
         public void EnterTable(ScripParser.TableContext context)
         {
-            Write("<table>");
+            Write("<table class=\"table\">");
         }
 
         public void ExitTable(ScripParser.TableContext context)

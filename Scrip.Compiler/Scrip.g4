@@ -87,8 +87,8 @@ codeBlock                     : CODE_BLOCK_DELIMITER_START .+? CODE_BLOCK_DELIMI
 CODE_BLOCK_DELIMITER_START    :  '#!';
 CODE_BLOCK_DELIMITER_STOP     :  '!#';
 
-table                         : '#Table{' tableRow ('\r\n' tableRow)*? '}';
-tableRow                      : tableCell ('|' tableCell)*;
+table                         : tableRow+;
+tableRow                      : '|' tableCell ('|' tableCell)* '\r\n';
 tableCell                     : block*?;
 
 link                          : LINK;

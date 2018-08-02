@@ -4,7 +4,5 @@
 [ ] Add support for double quotes and escaping in tables, so that cells can contain commas.
 [ ] Strikeouts, normal dashes, and bullet points need to be differentiated better.
 
-#Table{
-This |  Is  |   a header
-1    |  2   |   3
-}
+| This |  Is  |   a header
+| 1    |  2   |   3
