@@ -8,7 +8,7 @@ paragraph                     : block*?;
 block                         : text
 							  | codeBlock
 		                      | italics | bold | underline | strikeout | literal
-							  | heading1 | heading2 | heading3 | heading4 | heading5 | heading6
+							  | heading
 							  | textbox | checkedCheckbox | uncheckedCheckbox | quotation
 				              | hashtag | mention
 							  | table
@@ -71,17 +71,7 @@ MENTION                       : '@' [a-zA-Z]+;
 literal                       : LITERAL;
 LITERAL                       : '`' .*? '`';
 
-heading1                      : '# ' block*? ('\r\n' | '\n');
-
-heading2                      : '## ' block*? ('\r\n' | '\n');
-
-heading3                      : '### ' block*? ('\r\n' | '\n');
-
-heading4                      : '#### ' block*? ('\r\n' | '\n');
-
-heading5                      : '##### ' block*? ('\r\n' | '\n');
-
-heading6                      : '###### ' block*? ('\r\n' | '\n');
+heading                       : '#'+ ' ' block*? ('\r\n' | '\n');
 
 codeBlock                     : CODE_BLOCK_DELIMITER_START .+? CODE_BLOCK_DELIMITER_STOP;
 CODE_BLOCK_DELIMITER_START    :  '#!';

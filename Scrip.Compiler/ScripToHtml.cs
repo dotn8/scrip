@@ -208,65 +208,24 @@ namespace Scrip.Compiler
         {
         }
 
-        public void EnterHeading1(ScripParser.Heading1Context context)
+        public void EnterHeading(ScripParser.HeadingContext context)
         {
-            Write("<h1>");
+            var regex = new Regex("^(#+)");
+
+            var match = regex.Match(context.GetText());
+            var level = match.Groups[1].ToString().Length;
+
+            Write($"<h{level}>");
         }
 
-        public void ExitHeading1(ScripParser.Heading1Context context)
+        public void ExitHeading(ScripParser.HeadingContext context)
         {
-            Write("</h1>");
-        }
+            var regex = new Regex("^(#+)");
 
-        public void EnterHeading2(ScripParser.Heading2Context context)
-        {
-            Write("<h2>");
-        }
+            var match = regex.Match(context.GetText());
+            var level = match.Groups[1].ToString().Length;
 
-        public void ExitHeading2(ScripParser.Heading2Context context)
-        {
-            Write("</h2>");
-        }
-
-        public void EnterHeading3(ScripParser.Heading3Context context)
-        {
-            Write("<h3>");
-        }
-
-        public void ExitHeading3(ScripParser.Heading3Context context)
-        {
-            Write("</h3>");
-        }
-
-        public void EnterHeading4(ScripParser.Heading4Context context)
-        {
-            Write("<h4>");
-        }
-
-        public void ExitHeading4(ScripParser.Heading4Context context)
-        {
-            Write("</h4>");
-        }
-
-        public void EnterHeading5(ScripParser.Heading5Context context)
-        {
-            Write("<h5>");
-        }
-
-        public void ExitHeading5(ScripParser.Heading5Context context)
-        {
-            Write("</h5>");
-        }
-
-        public void EnterHeading6(ScripParser.Heading6Context context)
-        {
-            Write("<h6>");
-            Write(context.GetText().Trim('#', ' ', '\r', '\n'));
-        }
-
-        public void ExitHeading6(ScripParser.Heading6Context context)
-        {
-            Write("</h6>");
+            Write($"</h{level}>");
         }
 
         public void EnterCodeBlock(ScripParser.CodeBlockContext context)
