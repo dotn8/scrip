@@ -37,33 +37,20 @@ QUOTATION_AUTHOR              : (' ' | '\n' | '\t')+ '--' (~(' ' | '\n' | '\t')+
 //PARENS_OPEN                   : '(';
 //PARENS_CLOSE                  : ')';
 
-italics                       : ITALICS_DELIMITER block* ITALICS_DELIMITER;
-ITALICS_DELIMITER             : '/';
+text : TEXT;
+TEXT : (.
+	   | ' / ' | ~' ' '/' ~' '
+       | ' * ' | ~' ' '*' ~' '
+       | ' ' '-'+ ' ' | ~' ' '-'+ ~' '
+       )+?;
 
-bold                          : BOLD_DELIMITER block* BOLD_DELIMITER;
-BOLD_DELIMITER                : '*';
+italics                       : '/' block* '/';
 
-underline                     : UNDERLINE_DELIMITER block* UNDERLINE_DELIMITER;
-UNDERLINE_DELIMITER           : '_';
+bold                          : '*' block* '*';
 
-strikeout                     : STRIKEOUT_DELIMITER block* STRIKEOUT_DELIMITER;
-STRIKEOUT_DELIMITER           : '-';
+underline                     : '_' block* '_';
 
-//italics                       : ITALICS_DELIMITER_START block* ITALICS_DELIMITER_STOP;
-//ITALICS_DELIMITER_START       : (' ' | '\n' | '\t') '/';
-//ITALICS_DELIMITER_STOP        : '/' (' ' | '\n' | '\t');
-
-//bold                          : BOLD_DELIMITER_START block* BOLD_DELIMITER_STOP;
-//BOLD_DELIMITER_START          : (' ' | '\n' | '\t') '*';
-//BOLD_DELIMITER_STOP           : '*' (' ' | '\n' | '\t');
-
-//underline                     : UNDERLINE_DELIMITER_START block* UNDERLINE_DELIMITER_STOP;
-//UNDERLINE_DELIMITER_START     : (' ' | '\n' | '\t') '_';
-//UNDERLINE_DELIMITER_STOP      : '_' (' ' | '\n' | '\t');
-
-//strikeout                     : STRIKEOUT_DELIMITER_START block* STRIKEOUT_DELIMITER_STOP;
-//STRIKEOUT_DELIMITER_START     : (' ' | '\n' | '\t') '-';
-//STRIKEOUT_DELIMITER_STOP      : '-' (' ' | '\n' | '\t');
+strikeout                     : '-' block* '-';
 
 mention                       : MENTION;
 MENTION                       : '@' [a-zA-Z]+;
@@ -71,7 +58,7 @@ MENTION                       : '@' [a-zA-Z]+;
 literal                       : LITERAL;
 LITERAL                       : '`' .*? '`';
 
-heading                       : '#'+ ' ' block*? ('\r\n' | '\n');
+heading                       : '#'+ block*? ('\r\n' | '\n');
 
 codeBlock                     : CODE_BLOCK_DELIMITER_START .+? CODE_BLOCK_DELIMITER_STOP;
 CODE_BLOCK_DELIMITER_START    :  '#!';
@@ -95,6 +82,3 @@ AUTO_NESTED                   : '#AutoNested{' .*? '}';
 
 hashtag                       : HASHTAG;
 HASHTAG                       : '#' [a-zA-Z]+;
-
-text : TEXT;
-TEXT : .+?;

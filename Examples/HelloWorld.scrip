@@ -4,23 +4,17 @@
 [ ] Work on mid term
 [ ] Finish current homework
 
-1. Something or other. /hi there/
-2. Something else
+1. /This should be in italics/ but this/that should not be
+2. *This should be bold* but x*y should not be
+3. -This should be in strikeout- but x-y should not be
+4. _This should be in underlined_ but this should not be
 
-#Table{
-Status,  Activity,                Notes
-   [ ],  1. Do such and such,     ___
-   [ ],  2. Do such and such,     ___
-}
+
+| Status | Activity             |  Notes
+|    [ ] | 1. Do such and such  |  ___
+|    [ ] | 2. Do such and such  |  ___
 
 - Unordered item example
-
-#!python
-if includes_slides:
-	#!scrip
-	This section is only shown if `includes_slides` is `True`.
-	!#
-!#
 
 """
 

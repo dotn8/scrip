@@ -122,7 +122,7 @@ namespace Scrip.Compiler
 
         public void EnterItalics([NotNull] ScripParser.ItalicsContext context)
         {
-            Write("<i>");
+            Write(" <i>" + context.GetChild(0).ToString().Replace("/", ""));
         }
 
         public void ExitTextbox(ScripParser.TextboxContext context)
@@ -152,27 +152,27 @@ namespace Scrip.Compiler
 
         public void ExitBold(ScripParser.BoldContext context)
         {
-            Write("</b>");
+            Write(context.children.Last().ToString().Replace("*", "") + "</b> ");
         }
 
         public void EnterUnderline(ScripParser.UnderlineContext context)
         {
-            Write("<u>");
+            Write(" <u>" + context.GetChild(0).ToString().Replace("_", ""));
         }
 
         public void ExitUnderline(ScripParser.UnderlineContext context)
         {
-            Write("</u>");
+            Write(context.children.Last().ToString().Replace("_", "") + "</u> ");
         }
 
         public void EnterStrikeout(ScripParser.StrikeoutContext context)
         {
-            Write("<s>");
+            Write(" <s>" + context.GetChild(0).ToString().Replace("-", ""));
         }
 
         public void ExitStrikeout(ScripParser.StrikeoutContext context)
         {
-            Write("</s>");
+            Write(context.children.Last().ToString().Replace("-", "") + "</s> ");
         }
 
         public void EnterHashtag(ScripParser.HashtagContext context)
@@ -354,12 +354,12 @@ namespace Scrip.Compiler
 
         public void ExitItalics([NotNull] ScripParser.ItalicsContext context)
         {
-            Write("</i>");
+            Write(context.children.Last().ToString().Replace("/", "") + "</i> ");
         }
 
         public void EnterBold(ScripParser.BoldContext context)
         {
-            Write("<b>");
+            Write(" <b>" + context.GetChild(0).ToString().Replace("*", ""));
         }
 
         public void ExitText([NotNull] ScripParser.TextContext context)

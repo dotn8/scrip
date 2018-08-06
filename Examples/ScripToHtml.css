@@ -1,0 +1,11 @@
+input.textbox {
+    background-color: white;
+    border: 0px solid black;
+    border-bottom: .1em solid black;
+    width: 100%;
+    display: block;
+}
+
+input.checkbox {
+    display: inline;
+}
