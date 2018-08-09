@@ -13,7 +13,6 @@ block                         : text
 				              | hashtag | mention
 							  | table
 							  | (orderedItem block*?) | (unorderedItem block*?)
-							  | link | image | nested | autoNested
 						      ;
 
 orderedItem                   : ORDERED_ITEM_DELIMITER block+;
@@ -68,17 +67,6 @@ table                         : tableRow+;
 tableRow                      : '|' tableCell ('|' tableCell)* '\r\n';
 tableCell                     : block*?;
 
-link                          : LINK;
-LINK                          : '#Link{' .*? '|' .*? '}';
-
-image                         : IMAGE;
-IMAGE                         : '#Image{' .*? '}';
-
-nested                        : NESTED;
-NESTED                        : '#Nested{' .*? '}';
-
-autoNested                    : AUTO_NESTED;
-AUTO_NESTED                   : '#AutoNested{' .*? '}';
-
-hashtag                       : HASHTAG;
-HASHTAG                       : '#' [a-zA-Z]+;
+hashtag                       : HASHTAG_WITH_PARAMETERS | HASHTAG_WITHOUT_PARAMETERS;
+HASHTAG_WITH_PARAMETERS       : '#' [a-zA-Z]+ '{' .*? ('|' .*?)*? '}';
+HASHTAG_WITHOUT_PARAMETERS    : '#' [a-zA-Z]+;

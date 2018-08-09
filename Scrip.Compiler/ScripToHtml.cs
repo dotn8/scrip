@@ -177,8 +177,83 @@ namespace Scrip.Compiler
 
         public void EnterHashtag(ScripParser.HashtagContext context)
         {
-            Write("<span class=\"hashtag\">");
-            Write(context.HASHTAG().GetText());
+            if (context.HASHTAG_WITHOUT_PARAMETERS() != null)
+            {
+                var text = context.HASHTAG_WITHOUT_PARAMETERS().GetText();
+                var regex = new Regex(@"#([a-zA-Z]+)");
+                var match = regex.Match(text);
+                var hashtagName = match.Groups[1].ToString();
+
+                if (hashtagName == "AutoNested")
+                {
+                    var entries = Directory.EnumerateFileSystemEntries(_folder).OrderBy(fse => fse);
+
+                    var dynamicScrip = "";
+
+                    foreach (var fse in entries)
+                    {
+                        if (Directory.Exists(fse))
+                        {
+                            var absolutePath = Path.Combine(fse, "Notes.scrip");
+                            if (!File.Exists(absolutePath))
+                            {
+                                continue;
+                            }
+
+                            var name = Path.GetFileName(fse);
+
+                            dynamicScrip += $"## #Link{{{name}|{name}/Notes.scrip}}\n";
+                        }
+                    }
+
+                    ConvertScripToHtml(dynamicScrip);
+                }
+            }
+
+            if (context.HASHTAG_WITH_PARAMETERS() != null)
+            {
+                var text = context.HASHTAG_WITH_PARAMETERS().GetText();
+                var regex = new Regex(@"#([a-zA-Z]+)\{(.+)\}");
+                var match = regex.Match(text);
+                var hashtagName = match.Groups[1].ToString();
+                var parameterText = match.Groups[2].ToString();
+                var parameters = parameterText.Split('|');
+
+                if (hashtagName == "Link")
+                {
+                    var linkTitle = parameters.Length > 1 ? parameters[1] : Path.GetFileNameWithoutExtension(parameters[0]);
+                    var linkTarget = parameters.Length > 1 ? parameters[1] : parameters[0];
+
+                    if (linkTarget.EndsWith(".scrip"))
+                    {
+                        var nestedTarget = GetAbsolutePath(linkTarget);
+                        ConvertFileToHtml(nestedTarget);
+                        linkTarget = Path.ChangeExtension(linkTarget, ".html");
+                    }
+
+                    Write($"<a href=\"{linkTarget}\">{linkTitle}</a>");
+                }
+                else if (hashtagName == "Image")
+                {
+                    var linkTarget = parameters[0];
+                    Write($"<img src=\"{linkTarget}\" />");
+                }
+                else if (hashtagName == "Nested")
+                {
+                    var nestedTarget = parameters[0];
+                    nestedTarget = GetAbsolutePath(nestedTarget);
+                    var nestedTargetFolder = Path.GetDirectoryName(nestedTarget);
+
+                    var lexer = new ScripLexer(new AntlrFileStream(nestedTarget));
+                    var tokens = new CommonTokenStream(lexer);
+                    var parser = new ScripParser(tokens);
+                    var tree = parser.paragraphs();
+
+                    var walker = new ParseTreeWalker();
+                    var listener = new ScripToHtml(nestedTargetFolder, _streamWriter);
+                    walker.Walk(listener, tree);
+                }
+            }
         }
 
         public void ExitHashtag(ScripParser.HashtagContext context)
@@ -380,108 +455,9 @@ namespace Scrip.Compiler
             Console.Write(str);
         }
 
-        public void EnterLink([NotNull] ScripParser.LinkContext context)
-        {
-            var regex = new Regex(@"#Link\{(.+)\|(.+)\}");
-            var match = regex.Match(context.LINK().GetText());
-            var linkTitle = match.Groups[1];
-            var linkTarget = match.Groups[2].ToString();
-
-            if (linkTarget.ToString().EndsWith(".scrip"))
-            {
-                var nestedTarget = GetAbsolutePath(linkTarget);
-                ConvertFileToHtml(nestedTarget);
-                linkTarget = Path.ChangeExtension(linkTarget, ".html");
-            }
-
-            Write($"<a href=\"{linkTarget}\">{linkTitle}</a>");
-        }
-
-        public void ExitLink([NotNull] ScripParser.LinkContext context)
-        {
-
-        }
-
-        public void EnterImage([NotNull] ScripParser.ImageContext context)
-        {
-            var regex = new Regex(@"#Image\{(.+)\}");
-            var text = context.IMAGE().GetText();
-            var match = regex.Match(text);
-            var linkTarget = match.Groups[1];
-             Write($"<img src=\"{linkTarget}\" />");
-        }
-
-        public void ExitImage([NotNull] ScripParser.ImageContext context)
-        {
-
-        }
-
         private string GetAbsolutePath(string relativePath)
         {
             return Path.Combine(_folder, relativePath);
-        }
-
-        public void EnterNested([NotNull] ScripParser.NestedContext context)
-        {
-            var regex = new Regex(@"#Nested\{(.+)\}");
-            var text = context.NESTED().GetText();
-            var match = regex.Match(text);
-            var nestedTarget = match.Groups[1].ToString();
-            nestedTarget = GetAbsolutePath(nestedTarget);
-            var nestedTargetFolder = Path.GetDirectoryName(nestedTarget);
-
-            var lexer = new ScripLexer(new AntlrFileStream(nestedTarget));
-            var tokens = new CommonTokenStream(lexer);
-            var parser = new ScripParser(tokens);
-            var tree = parser.paragraphs();
-
-            var walker = new ParseTreeWalker();
-            var listener = new ScripToHtml(nestedTargetFolder, _streamWriter);
-            walker.Walk(listener, tree);
-        }
-
-        public void ExitNested([NotNull] ScripParser.NestedContext context)
-        {
-            
-        }
-
-        public void EnterAutoNested([NotNull] ScripParser.AutoNestedContext context)
-        {
-            var entries = Directory.EnumerateFileSystemEntries(_folder).OrderBy(fse => fse);
-
-            var dynamicScrip = "";
-
-            foreach (var fse in entries)
-            {
-                if (Directory.Exists(fse))
-                {
-                    var absolutePath = Path.Combine(fse, "Notes.scrip");
-                    if (!File.Exists(absolutePath))
-                    {
-                        continue;
-                    }
-
-                    var name = Path.GetFileName(fse);
-
-                    dynamicScrip += $"## #Link{{{name}|{name}/Notes.scrip}}\n";
-                }
-                //else
-                //{
-                //    if (!path.EndsWith(".scrip"))
-                //    {
-                //        continue;
-                //    }
-
-                //    dynamicScrip += $"## #Link{{{fse}}}\n";
-                //}
-            }
-
-            ConvertScripToHtml(dynamicScrip);
-        }
-
-        public void ExitAutoNested([NotNull] ScripParser.AutoNestedContext context)
-        {
-            
         }
 
         //public void EnterMacro([NotNull] ScripParser.MacroContext context)
