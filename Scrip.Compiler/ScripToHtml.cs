@@ -66,9 +66,9 @@ namespace Scrip.Compiler
             Write($"<link rel=\"stylesheet\" href=\"ScripToHtml.css\">");
             Write("<link href=\"http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css\" rel=\"stylesheet\">");
             Write("</head>");
-            Write("<body>");
+            Write("<body><div class=\"columns-1\">");
             walker.Walk(this, tree);
-            Write("</body>");
+            Write("<div></body>");
             Write("</html>");
         }
 
@@ -252,6 +252,11 @@ namespace Scrip.Compiler
                     var walker = new ParseTreeWalker();
                     var listener = new ScripToHtml(nestedTargetFolder, _streamWriter);
                     walker.Walk(listener, tree);
+                }
+                else if (hashtagName == "Columns")
+                {
+                    var numColumns = int.Parse(parameters[0].Trim());
+                    Write($"</div><div class=\"columns-{numColumns}\">");
                 }
             }
         }
