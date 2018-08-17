@@ -63,8 +63,8 @@ namespace Scrip.Compiler
 
             Write("<html>");
             Write("<head>");
-            Write($"<link rel=\"stylesheet\" href=\"ScripToHtml.css\">");
             Write("<link href=\"http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css\" rel=\"stylesheet\">");
+            Write("<link href=\"ScripToHtml.css\" rel=\"stylesheet\">");
             Write("</head>");
             Write("<body><div class=\"columns-1\">");
             walker.Walk(this, tree);
@@ -208,8 +208,12 @@ namespace Scrip.Compiler
 
                     ConvertScripToHtml(dynamicScrip);
                 }
+                else if (hashtagName == "ColumnBreak")
+                {
+                    Write("<div class=\"column-break\"></div>");
+                }
             }
-
+             
             if (context.HASHTAG_WITH_PARAMETERS() != null)
             {
                 var text = context.HASHTAG_WITH_PARAMETERS().GetText();
@@ -351,7 +355,7 @@ namespace Scrip.Compiler
 
         public void EnterParagraph(ScripParser.ParagraphContext context)
         {
-            if (context.ChildCount == 0)
+            if (context.ChildCount == 0 || string.IsNullOrWhiteSpace(context.GetText()))
                 return;
             Write("<p>");
         }
