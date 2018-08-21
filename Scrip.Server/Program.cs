@@ -14,6 +14,8 @@ namespace Scrip.Server
   }
 ");
 
+
+
             var root = new { Hello = "Hello World!" };
             var json = schema.Execute(_ =>
             {
