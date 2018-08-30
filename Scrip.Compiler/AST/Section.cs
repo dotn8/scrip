@@ -23,7 +23,12 @@ namespace Scrip.Compiler.AST
 
     public class Text : Block
     {
+        public Text(string value)
+        {
+            Value = value;
+        }
 
+        public string Value { get; }
     }
 
     public class CodeBlock : Block
@@ -38,32 +43,62 @@ namespace Scrip.Compiler.AST
 
     public class Italics : Block
     {
+        public Italics(Block[] blocks)
+        {
+            Blocks = blocks;
+        }
 
+        public Block[] Blocks { get; }
     }
 
     public class Bold : Block
     {
+        public Bold(Block[] blocks)
+        {
+            Blocks = blocks;
+        }
 
+        public Block[] Blocks { get; }
     }
 
     public class Underline : Block
     {
+        public Underline(Block[] blocks)
+        {
+            Blocks = blocks;
+        }
 
+        public Block[] Blocks { get; }
     }
 
     public class Strikeout : Block
     {
+        public Strikeout(Block[] blocks)
+        {
+            Blocks = blocks;
+        }
 
+        public Block[] Blocks { get; }
     }
 
     public class Literal : Block
     {
+        public Literal(string value)
+        {
+            Value = value;
+        }
 
+        public string Value { get; }
     }
 
     public class Heading : Block
     {
+        public Heading(Block[] blocks)
+        {
+            Blocks = blocks;
+        }
 
+        public Block[] Blocks { get; }
     }
 
     public class Textbox : Block
@@ -152,7 +187,9 @@ namespace Scrip.Compiler.AST
     {
         public override Block VisitBold([NotNull] ScripParser.BoldContext context)
         {
-            return new Bold();
+            throw new NotImplementedException();
+
+            //return new Bold();
         }
 
         public override Block VisitCheckedCheckbox([NotNull] ScripParser.CheckedCheckboxContext context)
